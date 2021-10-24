@@ -1,10 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Deploy a vulnerable webserver
 Parameters:
-  InstanceType:
-    Description: WebServer EC2 instance type
-    Type: String
-    Default: t2.micro
   WebServerIngressLocation:
     Description: The IP address range that can be used to SSH to the EC2 instances
     Type: String
@@ -15,14 +11,20 @@ Parameters:
   LatestAmiId:
     Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  Subnet:
+    Type: String
+  DeploymentVPC:
+    Type: String
+
 Resources:
   vulnWebServer:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: !Ref 'InstanceType'
-      SecurityGroups: 
+      InstanceType: t2.micro
+      SecurityGroupIds: 
       - !Ref 'InstanceSecurityGroup'
       ImageId: !Ref 'LatestAmiId'
+      SubnetId: !Ref Subnet
   
   webServerInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -57,12 +59,13 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable SSH access via port 80
+      GroupDescription: Enable web access via port 80
       SecurityGroupIngress:
       - IpProtocol: tcp
         FromPort: 80
         ToPort: 80
         CidrIp: !Ref 'WebServerIngressLocation'
+      VpcId: !Ref DeploymentVPC
   DataBucket:
     Type: AWS::S3::Bucket
     Properties: 
@@ -71,4 +74,3 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-
