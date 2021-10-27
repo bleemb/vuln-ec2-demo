@@ -7,7 +7,7 @@
 - Discuss the AWS metadata service, and the role it plays.   
 - Discuss Server Side Request Forgery (SSRF).  
 - Deploy a vulnerable ec2 instance, and use this technique to extract AWS access keys.  
-- Enumerate permissions and find s3 bucket.  
+- Enumerate permissions and exfiltrate data from the account.  
 - Patch the vulnerable infrastructure, demonstrating that the previous exploit is no longer possible.  
 
 

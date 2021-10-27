@@ -30,7 +30,7 @@ Set the AWS profile that will be used for deployment.  Execute an aws command to
 3.  Deploy the cloudformation template
 
 <i> What we will provision </i>
-- t2.micro ec2 instance.  
+- t2.micro ec2 instance, vulnerable by default (Credit to SethSec for the vulnerable application: https://github.com/sethsec/Nodejs-SSRF-App)
 - instance profile to be attached to the ec2 instance.  
 - security group attached to the ec2 instance, with port 80 from your Ip addressed inbound allowed.  
 - an s3 bucket

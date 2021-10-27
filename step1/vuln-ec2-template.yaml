@@ -10,7 +10,7 @@ Parameters:
     ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
   LatestAmiId:
     Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+    Default: '/aws/service/canonical/ubuntu/server/20.04/stable/current/amd64/hvm/ebs-gp2/ami-id'
   Subnet:
     Type: String
   DeploymentVPC:
@@ -20,15 +20,26 @@ Resources:
   vulnWebServer:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t2.micro
+      InstanceType: t2.small
+      IamInstanceProfile: !Ref webServerInstanceProfile
       SecurityGroupIds: 
       - !Ref 'InstanceSecurityGroup'
       ImageId: !Ref 'LatestAmiId'
       SubnetId: !Ref Subnet
-  
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          sudo yum install git -y
+          cd /opt
+          sudo git clone https://github.com/sethsec/Nodejs-SSRF-App.git
+          cd Nodejs-SSRF-App/
+          sudo ./install.sh
+          sudo nodejs ssrf-demo-app.js
+
   webServerInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
+      InstanceProfileName: ssrfmetadatademo
       Path: /
       Roles:
         - !Ref webServerRole
@@ -36,6 +47,8 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       Path: /
+      ManagedPolicyArns: 
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
       AssumeRolePolicyDocument:
         Statement: 
           - Action: 
@@ -55,6 +68,7 @@ Resources:
                   - "s3:ListObject"
                 Resource:
                   - !GetAtt DataBucket.Arn
+                  - !Sub ${DataBucket}/*
 
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
