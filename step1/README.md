@@ -15,15 +15,17 @@ From the command line, run the following command
 
 Set the AWS profile that will be used for deployment.  Execute an aws command to ensure the profile is correctly configured.
 
+This role will require the following permissions: 
+- Create/Modify/Delete permissions for ec2
+- Create/Modify/Delete permissions for s3
+
 <i> Linux or macOS </i>
 ``` script Bash
-    export AWS_PROFILE=${name_of your_profile}
     aws sts get-caller-identity
 ```
 
-<i> Windows </i>
+<i> Powershell </i>
 ``` script 
-    set AWS_PROFILE {name_of_your_profile}
     aws sts get-caller-identity
 ```
 
@@ -35,13 +37,17 @@ Set the AWS profile that will be used for deployment.  Execute an aws command to
 - security group attached to the ec2 instance, with port 80 from your Ip addressed inbound allowed.  
 - an s3 bucket
 
-<i> required information </i>
-- the subnet id with the ability for port 80 to ingress  
-- the VPC that this subnet is in
+<b> Required variables </b>
+- {Subnet-Value} - the subnet id with the ability for port 80 to ingress  
+- {VPC-Value} - the VPC that this subnet is in.
 
 ``` script
-    aws cloudformation create-stack --stack-name ec2-metadata-ssrf --template-body file://vuln-ec2-template.yaml --parameters ParameterKey="WebServerIngressLocation",ParameterValue=$(IP_ADDRESS) ParameterKey="Subnet",ParameterValue="" ParameterKey="DeploymentVPC",ParameterValue="" --capabilities CAPABILITY_IAM
+    aws cloudformation create-stack --stack-name ec2-metadata-ssrf --template-body file://vuln-ec2-template.yaml --parameters ParameterKey="WebServerIngressLocation",ParameterValue="$(IP_ADDRESS)/32" ParameterKey="Subnet",ParameterValue="{Subnet-Value}" ParameterKey="DeploymentVPC",ParameterValue="{VPC-Value}" --capabilities CAPABILITY_NAMED_IAM
 
+```
+
+``` Powershell
+aws cloudformation create-stack --stack-name ec2-metadata-ssrf --template-body file://vuln-ec2-template.yaml --parameters ParameterKey="WebServerIngressLocation",ParameterValue="$IP_ADDRESS/32" ParameterKey="Subnet",ParameterValue="{Subnet-Value}" ParameterKey="DeploymentVPC",ParameterValue="{VPC-Value}" --capabilities CAPABILITY_NAMED_IAM
 ```
 
 4.  Fill the bucket
@@ -50,5 +56,10 @@ Find the name of the bucket, and upload the text file to the recently created bu
 
 ``` script
     bucketname = aws cloudformation describe-stack-resource --stack-name ec2-metadata-ssrf --logical-resource-id DataBucket --query StackResourceDetail.PhysicalResourceId
-    aws s3 cp secret-file.txt $bucketname
+    aws s3 cp secret-file.txt "s3://${bucketname}"
+```
+
+``` Powershell
+ Set-Variable -Name "BUCKET_NAME" -Value (aws cloudformation describe-stack-resource --stack-name ec2-metadata-ssrf --logical-resource-id DataBucket --query StackResourceDetail.PhysicalResourceId)
+ aws s3 cp .\secret-file.txt "s3://$BUCKET_NAME"
 ```
