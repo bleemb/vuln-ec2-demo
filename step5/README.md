@@ -4,12 +4,21 @@
 
 s3 buckets are not able to be deleted unless they are empty.  We need to remove the secret-file from earlier.
 
-<b> Variables Required </b>
-- {bucket-name} - The name of the ec2-metadata bucket we provisioned.
+``` bash
+    BUCKET_NAME=$(aws cloudformation describe-stack-resource --stack-name ec2-metadata-ssrf --logical-resource-id DataBucket --query StackResourceDetail.PhysicalResourceId --output text)
 
-``` script
-    aws s3 rm s3://{bucket-name}/secret-file.txt
+    aws s3 rm s3://{BUCKET_NAME}/secret-file.txt
 ```
+
+<b> Powershell </b>
+``` Powershell
+    Set-Variable -Name "BUCKET_NAME" -Value (aws cloudformation describe-stack-resource --stack-name ec2-metadata-ssrf --logical-resource-id DataBucket --query StackResourceDetail.PhysicalResourceId)
+ 
+    aws s3 rm s3://{BUCKET_NAME}/secret-file.txt
+```
+
+<br />
+<br />
 
 2.  Delete the stack
 
