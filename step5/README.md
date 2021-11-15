@@ -7,14 +7,14 @@ s3 buckets are not able to be deleted unless they are empty.  We need to remove 
 ``` bash
     BUCKET_NAME=$(aws cloudformation describe-stack-resource --stack-name ec2-metadata-ssrf --logical-resource-id DataBucket --query StackResourceDetail.PhysicalResourceId --output text)
 
-    aws s3 rm s3://{BUCKET_NAME}/secret-file.txt
+    aws s3 rm s3://${BUCKET_NAME}/secret-file.txt
 ```
 
 <b> Powershell </b>
 ``` Powershell
     Set-Variable -Name "BUCKET_NAME" -Value (aws cloudformation describe-stack-resource --stack-name ec2-metadata-ssrf --logical-resource-id DataBucket --query StackResourceDetail.PhysicalResourceId)
  
-    aws s3 rm s3://{BUCKET_NAME}/secret-file.txt
+    aws s3 rm s3://${BUCKET_NAME}/secret-file.txt
 ```
 
 <br />
