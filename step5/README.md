@@ -1,6 +1,6 @@
 ## Clean-Up
 
-1.  Remove the secret file from your s3 bucket
+#### 1. Remove data object and the bucket
 
 s3 buckets are not able to be deleted unless they are empty.  We need to remove the secret-file from earlier.
 
@@ -20,7 +20,8 @@ s3 buckets are not able to be deleted unless they are empty.  We need to remove 
 <br />
 <br />
 
-2.  Delete the stack
+
+#### 2.  Delete the stack
 
 ```
     aws cloudformation delete-stack --stack-name ec2-metadata-ssrf
