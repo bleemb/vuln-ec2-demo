@@ -35,7 +35,9 @@ Resources:
           cd Nodejs-SSRF-App/
           sudo ./install.sh
           sudo nodejs ssrf-demo-app.js
-
+      Tags:
+        - Key: Name
+          Value: vulnerable-instance
   webServerInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:

@@ -11,6 +11,7 @@
 
 
 ## Requirements
+
 ### Package Dependencies
 - awscli
 - curl
@@ -25,7 +26,6 @@
 This workshop is broken down into a series of steps.  Each folder contains a README with all of the required steps and information.
 
 In some cases, the code snippets provided are operating system dependent.  Some code snippets will also require users to provide some form of input, and this will be clearly called out in each case. 
-
 
 ## Important Contextual Information 
 
@@ -45,3 +45,7 @@ Users can choose to restrict ec2 instances to only use the IMDSv2 service, which
 Embracing good secure coding practices such as never trusting user input will reduce the risk of being vulnerable to these types of vulnerabilities.
 - Least Privilege Principles  
 Whilst this will not completely mitigate this exploit, ensuring that IAM policies are designed with least privilege principles in mind will lower an attackers ability to move laterally in the event that an ec2 instance is compromised.
+
+## GO 
+
+You can start the workshop from the [step 1](step1/README.md)
