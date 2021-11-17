@@ -65,7 +65,7 @@ aws cloudformation create-stack --stack-name ec2-metadata-ssrf \
      ParameterKey="WebServerIngressLocation",ParameterValue="$IP_ADDRESS/32" \
      ParameterKey="Subnet",ParameterValue="{Subnet-Value}" \
      ParameterKey="DeploymentVPC",ParameterValue="{VPC-Value}" \
-     --capabilities CAPABILITY_NAMED_IAM --region eu-south-1
+     --capabilities CAPABILITY_NAMED_IAM
 ```
 
 
@@ -78,9 +78,8 @@ Open up [cloudformation in the console](https://ap-southeast-2.console.aws.amazo
 #### 4.  Fill the bucket
 
 
-CloudFormation stack named `ec2-metadata-ssrf` deployed previously has creaated S3 Object Store bucket. 
-In this step, we will disvoer the name of tis bucket, and upload the text file to the recently created bucket. This will serve to demonstrate web application access to potentially sensitive and confidential 
-PII data. 
+The CloudFormation stack named ec2-metadata-ssrf we deployed previously has created an S3 Object Store bucket.
+In this step, we will discover the name of this bucket, and upload the text file to the recently created bucket. This will serve to demonstrate web application access to potentially sensitive and confidential information. 
 
 <b> Bash </b>
 
